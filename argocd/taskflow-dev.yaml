@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/aungheinkyaw11/taskflow-todolist-project.git
-    targetRevision: argocd
-    path: helm/taskflow
+    repoURL: https://github.com/aungheinkyaw11/taskflow-gitops.git
+    targetRevision: main
+    path: taskflow
     helm:
       valueFiles:
         - values.yaml
