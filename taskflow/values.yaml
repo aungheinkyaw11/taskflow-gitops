@@ -3,8 +3,8 @@ backend:
   name: taskflow-backend
   replicaCount: 2
   image:
-    repository: aungheinkyaw/taskflow-backend:v1.0.0
-    tag: "4"
+    repository: aungheinkyaw/taskflow-backend
+    tag: "v1.0.0"
     pullPolicy: IfNotPresent
   containerPort: 5001
   service:
@@ -26,8 +26,8 @@ frontend:
   name: taskflow-frontend
   replicaCount: 1
   image:
-    repository: aungheinkyaw/taskflow-frontend:v1.0.1
-    tag: "4"
+    repository: aungheinkyaw/taskflow-frontend
+    tag: "v1.0.1"
     pullPolicy: IfNotPresent
   containerPort: 80
   service:
