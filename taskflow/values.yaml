@@ -97,12 +97,12 @@ httpRoute:
 ingress:
   enabled: true
   name: external-alb
-  namespace: taskflow
+  namespace: nginx-gateway
   className: alb
   host: taskflow.learnops.site
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
   backend:
-    serviceName: taskflow-frontend-service
+    serviceName: taskflow-gateway
     servicePort: 80
