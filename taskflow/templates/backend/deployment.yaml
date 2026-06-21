@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Values.backend.name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
@@ -10,6 +12,9 @@ spec:
       app: {{ .Values.backend.name }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app: {{ .Values.backend.name }}
     spec:

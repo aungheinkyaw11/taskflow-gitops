@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.configMap.name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 data:
   {{- range $key, $value := .Values.configMap.data }}
   {{ $key }}: {{ $value | quote }}

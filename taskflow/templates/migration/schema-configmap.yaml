@@ -1,0 +1,40 @@
+{{- if .Values.migration.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.migration.schemaConfigMapName }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  schema.sql: |
+    CREATE TABLE IF NOT EXISTS users (
+      id          SERIAL PRIMARY KEY,
+      name        VARCHAR(255) NOT NULL,
+      email       VARCHAR(255) NOT NULL UNIQUE,
+      password    VARCHAR(255) NOT NULL,
+      created_at  TIMESTAMPTZ  DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+    CREATE TABLE IF NOT EXISTS tasks (
+      id          SERIAL PRIMARY KEY,
+      title       VARCHAR(255) NOT NULL,
+      description TEXT,
+      status      VARCHAR(50)  DEFAULT 'todo'
+                               CHECK (status IN ('todo', 'in_progress', 'done')),
+      priority    VARCHAR(50)  DEFAULT 'medium'
+                               CHECK (priority IN ('low', 'medium', 'high')),
+      due_date    DATE,
+      user_id     INTEGER      REFERENCES users(id) ON DELETE CASCADE,
+      created_at  TIMESTAMPTZ  DEFAULT NOW(),
+      updated_at  TIMESTAMPTZ  DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_tasks_status   ON tasks(status);
+    CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority);
+    CREATE INDEX IF NOT EXISTS idx_tasks_user_id  ON tasks(user_id);
+
+    SELECT 'Database setup complete! Tables: users, tasks' AS result;
+{{- end }}

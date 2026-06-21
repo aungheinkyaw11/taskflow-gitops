@@ -63,6 +63,15 @@ secret:
     DB_PASSWORD: "taskflowuser123"
     JWT_SECRET: "56adf552a639de170b4ac63fc2561c8a2cb65275ca8735402c86bff06aadfdb4"
 
+migration:
+  enabled: true
+  name: taskflow-db-migration
+  schemaConfigMapName: taskflow-db-schema
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
 
 ## Gateway API Configuration
 gatewayClass:
