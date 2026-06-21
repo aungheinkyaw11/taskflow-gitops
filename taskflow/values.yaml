@@ -99,7 +99,7 @@ ingress:
   name: external-alb
   namespace: nginx-gateway
   className: alb
-  host: zaneapp.mohicanstech.com
+  host: taskflow.learnops.site
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
