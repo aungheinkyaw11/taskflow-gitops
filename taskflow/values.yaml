@@ -104,5 +104,6 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
   backend:
-    serviceName: ngf-nginx-gateway-fabric
+    #serviceName: ngf-nginx-gateway-fabric
+    serviceName: taskflow-frontend-service
     servicePort: 80
