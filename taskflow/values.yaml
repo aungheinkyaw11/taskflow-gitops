@@ -55,7 +55,7 @@ configMap:
     DB_PORT: "5432"
     DB_SSL: "true"
     NODE_ENV: "production"
-    CLIENT_URL: "http://taskflow.learnops.site"
+    CLIENT_URL: "http://zaneapp.mohicanstech.com"
 
 secret:
   name: taskflow-secret
@@ -99,10 +99,10 @@ ingress:
   name: external-alb
   namespace: nginx-gateway
   className: alb
-  host: taskflow.learnops.site
+  host: zaneapp.mohicanstech.com
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
   backend:
-    serviceName: taskflow-gateway
+    serviceName: ngf-nginx-gateway-fabric
     servicePort: 80
