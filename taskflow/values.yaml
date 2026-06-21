@@ -50,12 +50,12 @@ configMap:
   data:
     PORT: "5001"
     DB_USER: "taskflow_user"
-    DB_NAME: "taskflow"
-    DB_HOST: "taskflow.crmeaegqqncj.us-east-1.rds.amazonaws.com"
+    DB_NAME: "taskflow_db"
+    DB_HOST: "taskflow-dev-postgres.crmeaegqqncj.us-east-1.rds.amazonaws.com"
     DB_PORT: "5432"
     DB_SSL: "true"
     NODE_ENV: "production"
-    CLIENT_URL: "http://zaneapp.mohicanstech.com"
+    CLIENT_URL: "http://taskflow.learnops.site"
 
 secret:
   name: taskflow-secret
