@@ -7,12 +7,13 @@ This chart deploys the TaskFlow backend and frontend and connects traffic throug
 - Backend `Deployment` and `ClusterIP` `Service`
 - Frontend `Deployment` and `ClusterIP` `Service`
 - Backend `ConfigMap` and `Secret`
+- Schema `ConfigMap` and Argo CD migration `Job`
 - Optional `GatewayClass`
 - Optional cross-namespace `Gateway`
 - Optional `HTTPRoute` routing `/api` to the backend and `/` to the frontend
 - Optional ALB `Ingress` in the gateway namespace
 
-The chart does not install PostgreSQL, create RDS or ECR, install any controller, create DNS records, or initialize the database schema.
+The migration Job applies the included schema to the configured PostgreSQL database before the backend sync wave. The chart does not create RDS or ECR, install controllers, or create DNS records.
 
 ## Values layering
 
@@ -42,12 +43,13 @@ helm template taskflow-dev . \
 | `frontend.resources` | UI CPU and memory requests/limits |
 | `configMap.data` | Non-secret backend environment variables, including RDS and CORS settings |
 | `secret.data` | Legacy plaintext secret inputs; replace with an external secret workflow |
+| `migration` | PostgreSQL client image, schema ConfigMap, and migration Job settings |
 | `gatewayClass` | Optional controller-owned cluster-level class |
 | `gateway` | NGINX Gateway listener in `nginx-gateway` |
 | `httpRoute` | `/api` and `/` routing to TaskFlow services |
 | `ingress` | Internet-facing ALB pointing to the NGINX Gateway Service |
 
-Repository URLs, regions, hostnames, service names, and namespaces must match resources that actually exist in the target AWS account and EKS cluster. The current image repositories use `ap-southeast-1`, while the current Terraform example uses `us-east-1`; align them before deployment.
+Repository URLs, tags, hostnames, service names, and namespaces must match resources that actually exist in the target account and EKS cluster. The current chart uses Docker Hub images; update both repository values if ECR is the intended registry.
 
 ## Traffic path
 
@@ -95,5 +97,5 @@ Check the rendered image names, namespaces, routes, resource limits, and environ
 - Plaintext secrets are still present in `values.yaml` and must be rotated and externalized.
 - Deployments do not yet define readiness or liveness probes.
 - No `PodDisruptionBudget`, autoscaling, network policy, or service account is defined.
-- The database schema must be applied outside this chart.
+- Schema changes are embedded in the chart rather than generated from `backend/schema.sql`; keep both copies synchronized or adopt a dedicated migration tool.
 - The chart assumes both NGINX Gateway Fabric and AWS Load Balancer Controller already exist.

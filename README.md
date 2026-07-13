@@ -40,18 +40,17 @@ Do not deploy application changes with `kubectl edit`. Argo CD has `selfHeal: tr
 
 ## Cluster prerequisites
 
-Before applying the Argo CD Application, the cluster needs:
+Before applying the Argo CD Application, the environment needs:
 
 - Running EKS nodes with ECR pull access
 - Backend and frontend ECR repositories and images
 - A reachable PostgreSQL/RDS database with the schema applied
-- Argo CD in the `argocd` namespace
-- NGINX Gateway Fabric and its `nginx` GatewayClass
-- AWS Load Balancer Controller and an `alb` IngressClass
-- The `nginx-gateway` namespace and gateway controller Service
+- Argo CD, NGINX Gateway Fabric, Gateway API CRDs, and AWS Load Balancer Controller
 - DNS for `ingress.host`, normally pointing to the ALB created by the Ingress
 
-The application Terraform currently creates only VPC, EKS, IAM/OIDC, nodes, and EBS CSI. It does not create the other items in this list.
+The application Terraform now creates EKS, ECR, RDS, Argo CD, monitoring, Gateway API CRDs, NGINX Gateway Fabric, and AWS Load Balancer Controller. It does not push application images, apply this repository's Argo CD Application, or create DNS records.
+
+The current chart uses Docker Hub repositories even though Terraform creates ECR repositories. Either push the configured Docker Hub images or change `backend.image.repository` and `frontend.image.repository` to the Terraform-created ECR URLs.
 
 ## Security required before deployment
 
@@ -95,11 +94,9 @@ A Kubernetes `Secret` template does not make a plaintext value safe in Git. Base
    - Gateway and Ingress namespaces, class names, service name, and hostname
    - The secret delivery mechanism
 
-5. Create the namespaces if the controllers did not create them, then register the app:
+5. Register the app after Terraform has installed Argo CD and the controllers:
 
    ```bash
-   kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-   kubectl create namespace nginx-gateway --dry-run=client -o yaml | kubectl apply -f -
    kubectl apply -f argocd/taskflow-dev.yaml
    ```
 
